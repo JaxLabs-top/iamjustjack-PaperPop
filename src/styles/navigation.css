@@ -24,7 +24,7 @@
 .pp-footer-aside { font-weight: 700; }
 
 .pp-tabs { display: grid; }
-.pp-tablist { display: flex; gap: 4px; padding-left: 14px; overflow-x: auto; scrollbar-width: none; }
+.pp-tablist { display: flex; gap: 4px; padding: 4px 0 6px 14px; margin: -4px 0 -6px; overflow-x: auto; scrollbar-width: none; }
 .pp-tab {
   display: inline-flex; align-items: center; gap: 7px; flex: none;
   font: 700 14px var(--pp-f-mono); color: var(--pp-ink); cursor: pointer;
