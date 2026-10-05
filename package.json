@@ -1,0 +1,52 @@
+{
+  "name": "paperpop",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "author": "Jack Feuchte <hello@iamjustjack.de> (https://iamjustjack.de)",
+  "description": "Paper Pop - torn paper, pastels and polaroids. The React component library behind iamjustjack.de.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css",
+    "./fonts": "./src/fonts.ts",
+    "./vite": "./vite.ts"
+  },
+  "scripts": {
+    "dev": "vite --config docs/gallery/vite.config.ts",
+    "build": "vite build --config docs/gallery/vite.config.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "torn": "tsx scripts/torn.ts",
+    "docs": "tsx scripts/docs.ts",
+    "og": "tsx scripts/og.ts",
+    "docs:meta": "tsx scripts/docs.ts --no-media",
+    "mcp": "node mcp/server.mjs",
+    "mcp:http": "node mcp/http.mjs"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19"
+  },
+  "devDependencies": {
+    "@fontsource/dela-gothic-one": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/permanent-marker": "5.3.0",
+    "@types/node": "^26.6.3",
+    "@types/pngjs": "6.0.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "gifenc": "1.0.3",
+    "playwright": "1.63.0",
+    "pngjs": "7.0.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sharp": "0.35.5",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.1"
+  }
+}

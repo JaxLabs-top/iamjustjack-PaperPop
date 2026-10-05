@@ -1,0 +1,16 @@
+# Made by Jack (iamjustjack.de)
+services:
+  paperpop-doc-app:
+    container_name: paperpop-doc-app
+    build:
+      context: .
+      dockerfile: docker/app.Dockerfile
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - proxy-net
+
+networks:
+  proxy-net:
+    external: true

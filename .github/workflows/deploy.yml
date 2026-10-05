@@ -1,0 +1,59 @@
+# Made by Jack (iamjustjack.de)
+name: Deploy to Self-Hosted Docker
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/components/**'
+      - 'docs/media/**'
+      - 'README.md'
+  # The Docs workflow commits docs/components.json with [skip ci], so redeploy once it is done.
+  workflow_run:
+    workflows: [Docs]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+env:
+  APP_DIR: /opt/jaxlabs/docker-compose/paperpop-doc-app
+
+jobs:
+  deploy:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Create deployment directory
+        run: mkdir -p "$APP_DIR"
+
+      - name: Copy files to deployment directory
+        run: |
+          rsync -av --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='dist' \
+            ./ "$APP_DIR/"
+
+      - name: Deploy stack
+        run: |
+          cd "$APP_DIR"
+          docker compose up -d --build --remove-orphans
+
+      - name: Check container status
+        run: docker ps --filter "name=paperpop-doc-app"
+
+      - name: Clean up old images
+        run: docker image prune -f

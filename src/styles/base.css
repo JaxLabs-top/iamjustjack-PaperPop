@@ -1,0 +1,63 @@
+/* Made by Jack (iamjustjack.de) */
+*, *::before, *::after { box-sizing: border-box; }
+html { overflow-x: clip; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) and (pointer: fine) { html { scroll-behavior: smooth; } }
+@media (max-width: 639px) { input, select, textarea { font-size: 16px !important; } }
+a, button, summary, label, input, select, textarea, [role="button"], [role="tab"] { touch-action: manipulation; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+body {
+  margin: 0;
+  background-color: var(--pp-ground);
+  background-image: radial-gradient(rgba(42, 27, 61, .13) 1.2px, transparent 1.6px);
+  background-size: 26px 26px;
+  color: var(--pp-ink);
+  font-family: var(--pp-f-mono);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: clip;
+}
+/* Grid paper instead of dots: <body class="pp-ground-grid"> */
+body.pp-ground-grid {
+  background-image: linear-gradient(rgba(42, 27, 61, .08) 1px, transparent 1px), linear-gradient(90deg, rgba(42, 27, 61, .08) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+body.pp-ground-plain { background-image: none; }
+
+/* Paper grain over everything. Turn off with <html class="pp-no-grain">. */
+body::after {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 100;
+  opacity: .22; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .1 0 0 0 0 .24 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media (hover: none) { body::after { mix-blend-mode: normal; opacity: .12; transform: translateZ(0); } }
+.pp-no-grain body::after { display: none; }
+
+a { color: var(--pp-ink); text-decoration-thickness: 3px; text-decoration-color: var(--pp-pink); text-underline-offset: 5px; }
+a:hover { color: #7A2E86; }
+:focus-visible { outline: 3px solid var(--pp-ink); outline-offset: 4px; border-radius: 4px; }
+p { margin: 0 0 1em; }
+h1, h2, h3, h4 { margin: 0; font-weight: 400; }
+img, svg { display: block; }
+button { font-family: inherit; }
+
+.pp-display { font-family: var(--pp-f-display); letter-spacing: -.01em; line-height: .95; font-weight: 400; }
+.pp-hand { font-family: var(--pp-f-hand); font-weight: 400; }
+.pp-caps { font-weight: 700; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; }
+.pp-soft { color: var(--pp-ink-soft); }
+.pp-visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.pp-tilt { transform: rotate(var(--r, 0deg)); }
+@keyframes pp-fade-in { from { opacity: 0; } }
+@keyframes pp-pop-in { from { opacity: 0; transform: scale(.6) rotate(var(--r, 0deg)); } }
+@keyframes pp-drop-in { from { opacity: 0; transform: translateY(-24px) rotate(calc(var(--r, 0deg) - 4deg)); } }
+@keyframes pp-wiggle { 0%, 100% { transform: rotate(var(--r, 0deg)); } 25% { transform: rotate(calc(var(--r, 0deg) - 4deg)); } 75% { transform: rotate(calc(var(--r, 0deg) + 4deg)); } }
+@keyframes pp-spin { to { transform: rotate(360deg); } }
+@keyframes pp-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes pp-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }

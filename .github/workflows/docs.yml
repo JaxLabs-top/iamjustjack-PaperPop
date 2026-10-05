@@ -1,0 +1,57 @@
+# Made by Jack (iamjustjack.de)
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/components/**'
+      - 'docs/media/**'
+      - 'docs/components.json'
+      - 'README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    runs-on: [self-hosted, Linux, X64]
+    env:
+      IMAGE: paperpop-docs:${{ github.run_id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Typecheck and render docs in Docker
+        run: docker build -f docker/docs.Dockerfile -t "$IMAGE" .
+
+      - name: Copy generated docs out of the image
+        run: |
+          id=$(docker create "$IMAGE")
+          rm -rf docs/components docs/media
+          docker cp "$id:/app/docs/components" docs/components
+          docker cp "$id:/app/docs/media" docs/media
+          docker cp "$id:/app/docs/components.json" docs/components.json
+          docker cp "$id:/app/README.md" README.md
+          docker rm "$id"
+
+      - name: Commit and push
+        run: |
+          git add -A docs/components docs/media docs/components.json README.md
+          if git diff --cached --quiet; then
+            echo "Docs are up to date."
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "Update component docs [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Clean up image
+        if: always()
+        run: docker image rm -f "$IMAGE" || true

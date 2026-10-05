@@ -1,0 +1,54 @@
+/* Made by Jack (iamjustjack.de) */
+@property --r { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+
+:root {
+  /* Ink & paper */
+  --pp-ink: #2A1B3D;
+  --pp-ink-soft: #5B4B70;
+  --pp-paper: #FFFBF6;
+  --pp-rim: #FFFFFF;
+
+  /* Pastels (+ a lighter tone for stripes, fills and hovers) */
+  --pp-pink: #FF6FB1;   --pp-pink-2: #FFB3D6;
+  --pp-butter: #FFE27A; --pp-butter-2: #FFF0B8;
+  --pp-mint: #A6EBCB;   --pp-mint-2: #D3F5E5;
+  --pp-sky: #9CCBFF;    --pp-sky-2: #CFE5FF;
+  --pp-lilac: #C3A6FF;  --pp-lilac-2: #E1D3FF;
+  --pp-lavender: #D9CCF5;
+  --pp-cream: #FFF0C4;
+
+  /* Status */
+  --pp-danger: #B0124F;
+  --pp-success: #1E7A55;
+
+  /* Page ground (body background colour) */
+  --pp-ground: var(--pp-lavender);
+
+  /* Type */
+  --pp-f-display: 'Dela Gothic One', 'Arial Black', sans-serif;
+  --pp-f-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --pp-f-hand: 'Permanent Marker', cursive;
+
+  /* Depth */
+  --pp-shadow: drop-shadow(0 10px 14px rgba(42, 27, 61, .28));
+  --pp-shadow-box: 0 14px 24px rgba(42, 27, 61, .3);
+  --pp-hard: 4px 4px 0 var(--pp-ink);
+  --pp-border: 2.5px solid var(--pp-ink);
+
+  /* Motion */
+  --pp-bounce: cubic-bezier(.3, 1.4, .5, 1);
+  --pp-pop: cubic-bezier(.2, 1.6, .4, 1);
+
+  /* Tape */
+  --pp-washi: repeating-linear-gradient(90deg, var(--pp-pink) 0 14px, var(--pp-butter) 14px 28px, var(--pp-mint) 28px 42px, var(--pp-sky) 42px 56px, var(--pp-lilac) 56px 70px);
+
+  --pp-max: 1280px;
+}
+
+.pp-c-paper  { --c: var(--pp-paper);  --c2: #FFFFFF; }
+.pp-c-pink   { --c: var(--pp-pink);   --c2: var(--pp-pink-2); }
+.pp-c-butter { --c: var(--pp-butter); --c2: var(--pp-butter-2); }
+.pp-c-mint   { --c: var(--pp-mint);   --c2: var(--pp-mint-2); }
+.pp-c-sky    { --c: var(--pp-sky);    --c2: var(--pp-sky-2); }
+.pp-c-lilac  { --c: var(--pp-lilac);  --c2: var(--pp-lilac-2); }
+.pp-c-ink    { --c: var(--pp-ink);    --c2: var(--pp-ink-soft); color: var(--pp-paper); }
