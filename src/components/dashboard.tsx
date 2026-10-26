@@ -176,11 +176,15 @@ export function LineChart({ series, labels, height = 240, area = true, legend, l
   const H = height;
   const pad = { l: 44, r: 12, t: 16, b: 30 };
   const all = series.flatMap((s) => s.values);
-  const max = Math.max(...all) * 1.1 || 1;
-  const min = Math.min(0, ...all);
+  const lo = Math.min(0, ...all);
+  const raw = (Math.max(0, ...all) - lo) / 4 || 1;
+  const mag = 10 ** Math.floor(Math.log10(raw));
+  const step = [1, 2, 5, 10].map((m) => m * mag).find((m) => m >= raw)!;
+  const min = Math.floor(lo / step) * step;
+  const max = Math.max(min + step, Math.ceil(Math.max(...all) / step) * step);
   const x = (i: number) => pad.l + (i / Math.max(1, labels.length - 1)) * (W - pad.l - pad.r);
   const y = (v: number) => H - pad.b - ((v - min) / (max - min)) * (H - pad.t - pad.b);
-  const ticks = [0, 0.25, 0.5, 0.75, 1].map((t) => min + (max - min) * t);
+  const ticks = Array.from({ length: Math.round((max - min) / step) + 1 }, (_, i) => +(min + i * step).toFixed(10));
   const every = Math.ceil(labels.length / 8);
   return (
     <div className={cx('pp-linechart', className)} {...rest}>
@@ -188,7 +192,7 @@ export function LineChart({ series, labels, height = 240, area = true, legend, l
         {ticks.map((t) => (
           <g key={t}>
             <line x1={pad.l} x2={W - pad.r} y1={y(t)} y2={y(t)} className="pp-grid-line" />
-            <text x={pad.l - 8} y={y(t) + 4} textAnchor="end" className="pp-axis">{Math.round(t).toLocaleString('de-DE')}</text>
+            <text x={pad.l - 8} y={y(t) + 4} textAnchor="end" className="pp-axis">{t.toLocaleString('de-DE')}</text>
           </g>
         ))}
         {labels.map((l, i) => i % every === 0 && <text key={l + i} x={x(i)} y={H - 8} textAnchor="middle" className="pp-axis">{l}</text>)}
