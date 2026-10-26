@@ -10,7 +10,7 @@
 .pp-alert-close { display: grid; place-items: center; width: 26px; height: 26px; border: 0; border-radius: 50%; background: rgba(255,255,255,.55); color: var(--pp-ink); cursor: pointer; }
 .pp-alert-close:hover { background: var(--pp-paper); }
 
-.pp-toasts { position: fixed; z-index: 96; display: grid; gap: 12px; width: min(360px, calc(100% - 32px)); pointer-events: none; }
+.pp-toasts { position: fixed; z-index: 99; display: grid; gap: 12px; width: min(360px, calc(100% - 32px)); pointer-events: none; }
 .pp-toasts > * { pointer-events: auto; }
 .pp-toasts-bottom-right { right: 20px; bottom: 20px; }
 .pp-toasts-bottom-left { left: 20px; bottom: 20px; }

@@ -4,7 +4,7 @@ import {
   type HTMLAttributes, type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { cx, deg, len, vars } from '../lib/util';
+import { cx, deg, isTopLayer, len, vars } from '../lib/util';
 import type { PaperColor, Tone } from '../types';
 import { Icon, type IconName } from './Icon';
 
@@ -261,11 +261,12 @@ export interface ModalProps {
 export function Modal({ open, onClose, title, children, actions, color = 'paper', width = 520 }: ModalProps) {
   const id = useId();
   const sheet = useRef<HTMLDivElement>(null);
+  const wrap = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!open) return;
     const prev = document.activeElement as HTMLElement | null;
     sheet.current?.focus();
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && isTopLayer(wrap.current) && onClose();
     document.addEventListener('keydown', onKey);
     const overflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -277,7 +278,7 @@ export function Modal({ open, onClose, title, children, actions, color = 'paper'
   }, [open, onClose]);
   if (!open || typeof document === 'undefined') return null;
   return createPortal(
-    <div className="pp-modal-wrap">
+    <div ref={wrap} className="pp-modal-wrap">
       <div className="pp-modal-backdrop" onClick={onClose} aria-hidden="true" />
       <div ref={sheet} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={id} className={cx('pp-paper', 'pp-t-card-2', `pp-bg-${color}`, 'pp-modal')} style={{ maxWidth: width }}>
         <i className="pp-washi pp-washi-rainbow pp-t-lr-1" style={vars({ '--w': '130px', '--r': '-5deg', top: '-12px', left: '36px' })} aria-hidden="true" />

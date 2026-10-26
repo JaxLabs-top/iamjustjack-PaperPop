@@ -76,10 +76,12 @@
 .pp-sidebar-footer { margin-top: auto; padding-top: 16px; border-top: 2.5px dashed var(--pp-ink); }
 
 .pp-menu { position: relative; display: inline-block; }
-.pp-menu-list { position: absolute; top: calc(100% + 8px); z-index: 50; min-width: 210px; padding: 8px; display: grid; gap: 2px;
+.pp-menu-list { position: fixed; z-index: 98; min-width: 210px; box-sizing: border-box; padding: 8px; display: grid; gap: 2px;
   background: var(--pp-paper); border: 2.5px solid var(--pp-ink); border-radius: 8px; box-shadow: 5px 5px 0 var(--pp-ink);
   transform-origin: top left; animation: pp-menu-in .25s var(--pp-bounce); }
-.pp-menu-right .pp-menu-list { right: 0; transform-origin: top right; }
+.pp-menu-list-right { transform-origin: top right; }
+.pp-menu-list-up { transform-origin: bottom left; }
+.pp-menu-list-right.pp-menu-list-up { transform-origin: bottom right; }
 @keyframes pp-menu-in { from { opacity: 0; transform: scale(.85) rotate(-3deg); } }
 .pp-menu-item { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 10px; padding: 9px 11px; border-radius: 5px; font-size: 14px; cursor: pointer; color: var(--pp-ink); }
 .pp-menu-item:hover, .pp-menu-item:focus { background: var(--pp-butter-2); }

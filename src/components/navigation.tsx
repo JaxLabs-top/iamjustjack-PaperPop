@@ -1,5 +1,7 @@
 // Made by Jack (iamjustjack.de)
 import { useEffect, useId, useLayoutEffect, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
+import { useFloating } from '../lib/floating';
 import { cx, deg, reducedMotion, vars } from '../lib/util';
 import type { PaperColor, TornEdge } from '../types';
 import { Cutline } from './foundations';
@@ -342,12 +344,14 @@ export function Menu({ trigger, label, items, align = 'left', iconTrigger, class
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const btn = useRef<HTMLButtonElement>(null);
+  const list = useRef<HTMLDivElement>(null);
   const typed = useRef({ text: '', at: 0 });
-  const rows = () => Array.from(ref.current?.querySelectorAll<HTMLElement>('[role=menuitem]') ?? []);
+  const floating = useFloating(btn, open, { align });
+  const rows = () => Array.from(list.current?.querySelectorAll<HTMLElement>('[role=menuitem]') ?? []);
   const close = (refocus = false) => { setOpen(false); if (refocus) btn.current?.focus(); };
   useEffect(() => {
     if (!open) return;
-    const onDown = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
+    const onDown = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && !list.current?.contains(e.target as Node) && setOpen(false);
     document.addEventListener('mousedown', onDown);
     return () => document.removeEventListener('mousedown', onDown);
   }, [open]);
@@ -387,8 +391,8 @@ export function Menu({ trigger, label, items, align = 'left', iconTrigger, class
         {trigger}
         {!iconTrigger && <Icon name="chevron-down" size={16} stroke={3} />}
       </button>
-      {open && (
-        <div role="menu" className="pp-menu-list" onKeyDown={onListKey}>
+      {open && createPortal(
+        <div ref={list} role="menu" className={cx('pp-menu-list', `pp-menu-list-${align}`, floating.up && 'pp-menu-list-up')} style={floating.style} onKeyDown={onListKey}>
           {items.map((it, i) => {
             const body = <>{it.icon && <Icon name={it.icon} size={17} />}<span>{it.label}</span></>;
             const cls = cx('pp-menu-item', it.danger && 'pp-menu-danger', it.divider && 'pp-menu-divider');
@@ -397,7 +401,8 @@ export function Menu({ trigger, label, items, align = 'left', iconTrigger, class
               ? <a key={i} role="menuitem" href={it.href} className={cls} onClick={pick}>{body}</a>
               : <button key={i} role="menuitem" type="button" className={cls} onClick={pick}>{body}</button>;
           })}
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

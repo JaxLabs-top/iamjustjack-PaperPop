@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { detectLanguage, normalizeLanguage, tokenize, toLines } from '../lib/highlight';
-import { cx, deg, vars } from '../lib/util';
+import { cx, deg, isTopLayer, vars } from '../lib/util';
 import type { PaperColor, Tone } from '../types';
 import { CopyButton } from './buttons';
 import { Avatar } from './dashboard';
@@ -358,15 +358,16 @@ export interface DrawerProps {
 
 /** A sheet of paper sliding in from the side - filters, details, settings. */
 export function Drawer({ open, onClose, title, children, side = 'right', width = 380 }: DrawerProps) {
+  const wrap = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && isTopLayer(wrap.current) && onClose();
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
   if (!open || typeof document === 'undefined') return null;
   return createPortal(
-    <div className={cx('pp-drawer-wrap', `pp-drawer-${side}`)}>
+    <div ref={wrap} className={cx('pp-drawer-wrap', `pp-drawer-${side}`)}>
       <div className="pp-modal-backdrop" onClick={onClose} aria-hidden="true" />
       <aside className="pp-drawer" role="dialog" aria-modal="true" aria-label={typeof title === 'string' ? title : undefined} style={{ width: `min(${width}px, 92vw)` }}>
         <header>

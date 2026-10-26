@@ -26,3 +26,9 @@ export const reducedMotion = () =>
 let uid = 0;
 /** Tiny stable-ish id for label/aria wiring when React's useId isn't wanted. */
 export const nextId = (prefix = 'pp') => `${prefix}-${++uid}`;
+
+/** True when el is the most recently opened modal/drawer, so Escape only closes the top one. */
+export const isTopLayer = (el: Element | null) => {
+  const all = document.querySelectorAll('.pp-modal-wrap, .pp-drawer-wrap');
+  return !!el && all[all.length - 1] === el;
+};

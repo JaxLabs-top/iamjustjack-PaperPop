@@ -4,6 +4,8 @@ import {
   type ChangeEvent, type DragEvent, type HTMLAttributes, type InputHTMLAttributes, type KeyboardEvent, type ReactNode,
   type SelectHTMLAttributes, type TextareaHTMLAttributes,
 } from 'react';
+import { createPortal } from 'react-dom';
+import { useFloating } from '../lib/floating';
 import { cx, vars } from '../lib/util';
 import type { PaperColor } from '../types';
 import { Icon } from './Icon';
@@ -145,8 +147,8 @@ export function Select({ options, placeholder, className, children, id, ...rest 
   const native = useRef<HTMLSelectElement>(null);
   const root = useRef<HTMLSpanElement>(null);
   const listId = useId();
+  const list = useRef<HTMLUListElement>(null);
   const [open, setOpen] = useState(false);
-  const [up, setUp] = useState(false);
   const [active, setActive] = useState(0);
   const [items, setItems] = useState<SelectItem[]>([]);
   const [current, setCurrent] = useState({ value: '', label: '' });
@@ -170,8 +172,6 @@ export function Select({ options, placeholder, className, children, id, ...rest 
     setItems(list);
     const at = list.findIndex((o) => o.value === current.value && !o.disabled);
     setActive(at >= 0 ? at : step(-1, 1, list));
-    const r = root.current?.getBoundingClientRect();
-    setUp(!!r && window.innerHeight - r.bottom < 280 && r.top > window.innerHeight - r.bottom);
     setOpen(true);
   };
   const choose = (list: SelectItem[], i: number) => {
@@ -188,7 +188,7 @@ export function Select({ options, placeholder, className, children, id, ...rest 
 
   useEffect(() => {
     if (!open) return;
-    const away = (e: PointerEvent) => { if (!root.current?.contains(e.target as Node)) setOpen(false); };
+    const away = (e: PointerEvent) => { if (!root.current?.contains(e.target as Node) && !list.current?.contains(e.target as Node)) setOpen(false); };
     document.addEventListener('pointerdown', away);
     return () => document.removeEventListener('pointerdown', away);
   }, [open]);
@@ -226,9 +226,10 @@ export function Select({ options, placeholder, className, children, id, ...rest 
     }
   };
 
+  const floating = useFloating(root, open, { matchWidth: true, maxHeight: 260 });
   const showing = current.value !== '' ? current.label : placeholder ?? current.label;
   return (
-    <span ref={root} className={cx('pp-select', open && 'pp-select-open', up && 'pp-select-up', className)}>
+    <span ref={root} className={cx('pp-select', open && 'pp-select-open', className)}>
       <select ref={native} className="pp-select-native" tabIndex={-1} aria-hidden="true" defaultValue={rest.value === undefined && placeholder ? '' : undefined} {...rest}>
         {placeholder && <option value="" disabled>{placeholder}</option>}
         {options?.map((o) => {
@@ -246,8 +247,8 @@ export function Select({ options, placeholder, className, children, id, ...rest 
         <span>{showing || '\u00a0'}</span>
         <Icon name="chevron-down" size={18} stroke={3} />
       </button>
-      {open && (
-        <ul id={listId} className="pp-select-list" role="listbox" tabIndex={-1}>
+      {open && createPortal(
+        <ul ref={list} id={listId} className={cx('pp-select-list', floating.up && 'pp-select-list-up')} style={floating.style} role="listbox" tabIndex={-1}>
           {items.map((o, i) => (
             <li
               key={o.value} id={`${listId}-${i}`} role="option" aria-selected={o.value === current.value} aria-disabled={o.disabled || undefined}
@@ -258,7 +259,8 @@ export function Select({ options, placeholder, className, children, id, ...rest 
               {o.value === current.value && <Icon name="check" size={16} stroke={3} />}
             </li>
           ))}
-        </ul>
+        </ul>,
+        document.body,
       )}
     </span>
   );
