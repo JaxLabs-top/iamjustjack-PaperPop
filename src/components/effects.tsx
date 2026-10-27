@@ -76,9 +76,8 @@ function toLines(rects: DOMRect[]): Line[] {
 
 /** Selected text is covered with washi tape (desktop only). Returns an uninstall function. */
 export function installWashiSelection() {
-  if (!window.matchMedia(DESKTOP).matches) return () => {};
+  const desktop = window.matchMedia(DESKTOP);
   const root = document.documentElement;
-  root.classList.add('pp-washi-select');
   const layer = document.createElement('div');
   layer.className = 'pp-washi-layer';
   layer.setAttribute('aria-hidden', 'true');
@@ -88,6 +87,7 @@ export function installWashiSelection() {
   const draw = () => {
     frame = 0;
     layer.replaceChildren();
+    if (!desktop.matches) return;
     const selection = document.getSelection();
     if (!selection || selection.isCollapsed || !selection.rangeCount) return;
     const active = document.activeElement;
@@ -108,11 +108,18 @@ export function installWashiSelection() {
   const schedule = () => {
     if (!frame) frame = requestAnimationFrame(draw);
   };
+  const sync = () => {
+    root.classList.toggle('pp-washi-select', desktop.matches);
+    schedule();
+  };
+  sync();
+  desktop.addEventListener('change', sync);
   document.addEventListener('selectionchange', schedule);
   window.addEventListener('resize', schedule);
   window.addEventListener('scroll', schedule, { passive: true });
   return () => {
     cancelAnimationFrame(frame);
+    desktop.removeEventListener('change', sync);
     document.removeEventListener('selectionchange', schedule);
     window.removeEventListener('resize', schedule);
     window.removeEventListener('scroll', schedule);
