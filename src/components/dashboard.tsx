@@ -352,7 +352,7 @@ export function DataTable<T extends Record<string, unknown>>({ columns, rows, ro
           {sorted.length === 0 && <tr><td colSpan={columns.length} className="pp-table-empty pp-hand">{empty}</td></tr>}
           {sorted.map((r, i) => (
             <tr key={rowKey ? rowKey(r) : i} onClick={onRowClick && (() => onRowClick(r))} className={onRowClick ? 'pp-row-click' : undefined}>
-              {columns.map((c) => <td key={c.key} style={{ textAlign: c.align }}>{c.render ? c.render(r) : String(r[c.key] ?? '')}</td>)}
+              {columns.map((c) => <td key={c.key} style={{ textAlign: c.align }} data-label={typeof c.header === 'string' && c.header ? c.header : undefined}>{c.render ? c.render(r) : String(r[c.key] ?? '')}</td>)}
             </tr>
           ))}
         </tbody>
