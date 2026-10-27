@@ -8,7 +8,7 @@ const EDGE = 8;
  * Fixed position for a dropdown portaled to <body>, so cards with transforms or overflow can't clip it.
  * Opens below the anchor, flips up when there is more room above, stays inside the viewport and follows scroll/resize.
  */
-export function useFloating(anchor: RefObject<HTMLElement | null>, open: boolean, { align = 'left', matchWidth = false, maxHeight = 320 }: { align?: 'left' | 'right'; matchWidth?: boolean; maxHeight?: number } = {}) {
+export function useFloating(anchor: RefObject<HTMLElement | null>, open: boolean, { align = 'left', matchWidth = false, maxHeight = 320 }: { align?: 'left' | 'right'; matchWidth?: boolean; maxHeight?: number } = {}, floating?: RefObject<HTMLElement | null>) {
   const [pos, setPos] = useState<{ style: CSSProperties; up: boolean }>({ style: { position: 'fixed', top: 0, left: 0, opacity: 0 }, up: false });
 
   useLayoutEffect(() => {
@@ -20,6 +20,7 @@ export function useFloating(anchor: RefObject<HTMLElement | null>, open: boolean
       const vh = window.innerHeight;
       const below = vh - r.bottom - GAP - EDGE;
       const above = r.top - GAP - EDGE;
+      const w = Math.min(vw - 2 * EDGE, floating?.current?.offsetWidth || (matchWidth ? r.width : 210));
       const up = below < Math.min(maxHeight, 200) && above > below;
       const style: CSSProperties = {
         position: 'fixed',
@@ -27,7 +28,7 @@ export function useFloating(anchor: RefObject<HTMLElement | null>, open: boolean
         overflowY: 'auto',
         ...(up ? { bottom: vh - r.top + GAP } : { top: r.bottom + GAP }),
         ...(matchWidth && { width: r.width }),
-        ...(align === 'right' ? { right: Math.max(EDGE, vw - r.right) } : { left: Math.max(EDGE, Math.min(r.left, vw - EDGE - (matchWidth ? r.width : 210))) }),
+        left: Math.max(EDGE, Math.min(align === 'right' ? r.right - w : r.left, vw - EDGE - w)),
         maxWidth: vw - 2 * EDGE,
       };
       setPos({ style, up });
@@ -39,7 +40,7 @@ export function useFloating(anchor: RefObject<HTMLElement | null>, open: boolean
       window.removeEventListener('resize', place);
       window.removeEventListener('scroll', place, true);
     };
-  }, [anchor, open, align, matchWidth, maxHeight]);
+  }, [anchor, floating, open, align, matchWidth, maxHeight]);
 
   return pos;
 }

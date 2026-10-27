@@ -79,11 +79,12 @@
   .pp-table-wrap { overflow: visible; background: none; border: 0; box-shadow: none; }
   .pp-table, .pp-table tbody, .pp-table tr, .pp-table td { display: block; }
   .pp-table thead { display: none; }
-  .pp-table tbody { display: grid; gap: 14px; }
+  .pp-table tbody { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .pp-table tbody tr, .pp-table tbody tr:nth-child(even) { position: relative; background: var(--pp-paper); border: 3px solid var(--pp-ink); border-radius: 10px; box-shadow: 4px 4px 0 var(--pp-ink); }
   .pp-row-click:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--pp-ink); }
   .pp-table tbody tr td, .pp-table tbody tr:last-child td { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; text-align: right; border-bottom: 2px dashed rgba(42, 27, 61, .18); }
   .pp-table tbody tr td:nth-last-child(1 of [data-label]) { border-bottom: 0; }
+  .pp-table td > * { min-width: 0; }
   .pp-table td[data-label]::before { content: attr(data-label); flex: none; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--pp-ink-soft); }
   .pp-table tbody tr td:first-child { display: block; padding-right: 52px; font-size: 15px; text-align: left; border-bottom: 3px solid var(--pp-ink); }
   .pp-table td:first-child::before { display: none; }

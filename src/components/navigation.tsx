@@ -346,7 +346,7 @@ export function Menu({ trigger, label, items, align = 'left', iconTrigger, class
   const btn = useRef<HTMLButtonElement>(null);
   const list = useRef<HTMLDivElement>(null);
   const typed = useRef({ text: '', at: 0 });
-  const floating = useFloating(btn, open, { align });
+  const floating = useFloating(btn, open, { align }, list);
   const rows = () => Array.from(list.current?.querySelectorAll<HTMLElement>('[role=menuitem]') ?? []);
   const close = (refocus = false) => { setOpen(false); if (refocus) btn.current?.focus(); };
   useEffect(() => {

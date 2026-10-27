@@ -47,10 +47,10 @@
 @keyframes pp-acc-in { from { opacity: 0; transform: translateY(-6px); } }
 
 .pp-crumbs ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding: 0; font-size: 14px; }
-.pp-crumbs li { display: inline-flex; align-items: center; gap: 6px; }
+.pp-crumbs li { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; }
 .pp-crumbs li + li::before { content: "→"; font-family: var(--pp-f-hand); color: var(--pp-pink); font-size: 18px; }
 .pp-crumbs a { font-weight: 700; text-decoration-thickness: 2px; }
-.pp-crumbs [aria-current] { padding: 2px 8px; background: var(--pp-butter); border: 2px solid var(--pp-ink); transform: rotate(-2deg); display: inline-block; }
+.pp-crumbs [aria-current] { padding: 2px 8px; background: var(--pp-butter); border: 2px solid var(--pp-ink); transform: rotate(-2deg); display: inline-block; min-width: 0; overflow-wrap: anywhere; }
 
 .pp-pages { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .pp-pages button { display: grid; place-items: center; min-width: 40px; height: 40px; padding: 0 8px; font: 400 16px var(--pp-f-display); color: var(--pp-ink);
