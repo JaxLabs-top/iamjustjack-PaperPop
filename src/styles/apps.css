@@ -1,7 +1,15 @@
 /* Made by Jack (iamjustjack.de) */
 .pp-shell { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; min-height: 100vh; min-height: 100dvh; padding: 16px; align-items: start; max-width: var(--pp-shell-max, 1920px); margin-inline: auto; }
 .pp-shell-side { position: sticky; top: 16px; height: calc(100vh - 32px); height: calc(100dvh - 32px); }
-.pp-shell-side > .pp-sidebar { height: 100%; overscroll-behavior: contain; }
+.pp-shell-side > .pp-sidebar {
+  height: 100%; overflow-y: auto; overscroll-behavior: contain;
+  background:
+    linear-gradient(var(--pp-paper) 40%, transparent) top / 100% 40px no-repeat local,
+    linear-gradient(transparent, var(--pp-paper) 60%) bottom / 100% 40px no-repeat local,
+    radial-gradient(farthest-side at 50% 0, rgba(42, 27, 61, .3), transparent) top / 100% 16px no-repeat scroll,
+    radial-gradient(farthest-side at 50% 100%, rgba(42, 27, 61, .3), transparent) bottom / 100% 16px no-repeat scroll,
+    var(--pp-paper);
+}
 .pp-shell-main { display: grid; gap: 24px; min-width: 0; }
 .pp-shell-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; min-height: 50px; }
 .pp-shell-menu { display: none; }
